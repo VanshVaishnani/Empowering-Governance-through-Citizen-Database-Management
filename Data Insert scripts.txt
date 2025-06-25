@@ -1,0 +1,217 @@
+INSERT INTO religion VALUES
+(1, 'Hindu', 'Brahmin', 'General'),
+(2, 'Hindu', 'Patel', 'OBC'),
+(3, 'Muslim', 'Shaikh', 'General'),
+(4, 'Christian', 'Catholic', 'Minority'),
+(5, 'Sikh', 'Jat', 'General'),
+(6, 'Jain', 'Shwetambar', 'Minority'),
+(7, 'Hindu', 'Rajput', 'General'),
+(8, 'Muslim', 'Memon', 'OBC'),
+(9, 'Hindu', 'Dalit', 'SC'),
+(10, 'Christian', 'Protestant', 'Minority'),
+(11, 'Hindu', 'OBC-A', 'OBC'),
+(12, 'Muslim', 'Sayyed', 'General'),
+(13, 'Jain', 'Digambar', 'Minority'),
+(14, 'Hindu', 'OBC-B', 'OBC'),
+(15, 'Sikh', 'Arora', 'General'),
+(16, 'Buddhist', 'Navayana', 'Minority'),
+(17, 'Hindu', 'ST-A', 'ST'),
+(18, 'Muslim', 'Bohra', 'Minority'),
+(19, 'Hindu', 'ST-B', 'ST'),
+(20, 'Other', 'Not Applicable', 'Other');
+
+INSERT INTO address VALUES
+(1, '101 Main Street', 'Ahmedabad', 'Ahmedabad', 'Gujarat', 380001, NULL),
+(2, 'Sector 15, Plot 22', 'Gandhinagar', 'Gandhinagar', 'Gujarat', 382015, NULL),
+(3, '45 Patel Nagar', 'Vadodara', 'Vadodara', 'Gujarat', 390005, 1),
+(4, 'Near Railway Station', 'Surat', 'Surat', 'Gujarat', 395002, NULL),
+(5, '6 Nehru Road', 'Rajkot', 'Rajkot', 'Gujarat', 360001, 2),
+(6, 'Shanti Colony, House No. 12', 'Bhavnagar', 'Bhavnagar', 'Gujarat', 364001, NULL),
+(7, 'Opposite Bus Stand', 'Junagadh', 'Junagadh', 'Gujarat', 362001, 3),
+(8, '3rd Floor, Galaxy Apartments', 'Anand', 'Anand', 'Gujarat', 388001, NULL),
+(9, 'Sai Krupa Society', 'Nadiad', 'Kheda', 'Gujarat', 387001, 4),
+(10, 'Green Park, Bungalow No. 5', 'Mehsana', 'Mehsana', 'Gujarat', 384001, NULL),
+(11, '21 Shivam Nagar', 'Morbi', 'Morbi', 'Gujarat', 363641, 5),
+(12, 'Keshav Nagar, Street 8', 'Jamnagar', 'Jamnagar', 'Gujarat', 361001, NULL),
+(13, 'Near Old Fort', 'Porbandar', 'Porbandar', 'Gujarat', 360575, 6),
+(14, 'Radha Krishna Society', 'Godhra', 'Panchmahal', 'Gujarat', 389001, NULL),
+(15, 'Gandhi Chowk', 'Dahod', 'Dahod', 'Gujarat', 389151, 7),
+(16, 'Sardar Patel Road, No. 7', 'Bharuch', 'Bharuch', 'Gujarat', 392001, NULL),
+(17, 'New Market Area', 'Valsad', 'Valsad', 'Gujarat', 396001, 8),
+(18, 'Jalaram Society, Flat A-3', 'Vapi', 'Valsad', 'Gujarat', 396195, NULL),
+(19, 'Ambedkar Nagar', 'Surendranagar', 'Surendranagar', 'Gujarat', 363001, 9),
+(20, 'Behind Water Tank', 'Amreli', 'Amreli', 'Gujarat', 365601, NULL);
+
+INSERT INTO household VALUES
+(101, 'Apartment', 'Owned', 1),
+(102, 'Bungalow', 'Owned', 2),
+(103, 'Flat', 'Rented', 3),
+(104, 'Row House', 'Owned', 4),
+(105, 'Apartment', 'Rented', 5),
+(106, 'Bungalow', 'Owned', 6),
+(107, 'Flat', 'Owned', 7),
+(108, 'Row House', 'Rented', 8),
+(109, 'Apartment', 'Owned', 9),
+(110, 'Bungalow', 'Owned', 10),
+(111, 'Flat', 'Rented', 11),
+(112, 'Row House', 'Owned', 12),
+(113, 'Apartment', 'Owned', 13),
+(114, 'Bungalow', 'Rented', 14),
+(115, 'Flat', 'Owned', 15),
+(116, 'Row House', 'Owned', 16),
+(117, 'Apartment', 'Rented', 17),
+(118, 'Bungalow', 'Owned', 18),
+(119, 'Flat', 'Owned', 19),
+(120, 'Row House', 'Rented', 20);
+
+INSERT INTO citizen VALUES
+('123456789012', 'Amit', 'Patel', 'Ramesh Patel', 'Male', 'Bachelor Degree', 'Gujarati', 'Married', 'Engineer', '1990-05-15', NULL, 2, 1, 101),
+('234567890123', 'Priya', 'Sharma', 'Suresh Sharma', 'Female', 'Master Degree', 'Hindi', 'Married', 'Teacher', '1992-08-20', NULL, 1, 2, 102),
+('345678901234', 'Mohammad', 'Khan', 'Imran Khan', 'Male', 'High School', 'Urdu', 'Unmarried', 'Driver', '1988-11-10', NULL, 3, 3, 103),
+('456789012345', 'Jesica', 'Dsouza', 'Joseph Dsouza', 'Female', 'Associate Degree', 'English', 'Unmarried', 'Nurse', '1995-03-25', NULL, 4, 4, 104),
+('567890123456', 'Gurpreet', 'Singh', 'Jasbir Singh', 'Male', 'Secondary School', 'Punjabi', 'Married', 'Farmer', '1985-07-01', NULL, 5, 5, 105),
+('678901234567', 'Sweta', 'Jain', 'Mahavir Jain', 'Female', 'Bachelor Degree', 'Gujarati', 'Unmarried', 'Accountant', '1993-12-05', NULL, 6, 6, 106),
+('789012345678', 'Rajesh', 'Verma', 'Naresh Verma', 'Male', 'Master Degree', 'Hindi', 'Married', 'Businessman', '1987-09-30', NULL, 7, 7, 107),
+('890123456789', 'Fatima', 'Ansari', 'Ali Ansari', 'Female', 'High School', 'Urdu', 'Married', 'Tailor', '1991-04-18', NULL, 8, 8, 108),
+('901234567890', 'Kiran', 'Solanki', 'Ashok Solanki', 'Female', 'Primary School', 'Gujarati', 'Unmarried', 'Laborer', '1998-01-12', NULL, 9, 9, 109),
+('012345678912', 'David', 'Wilson', 'George Wilson', 'Male', 'Bachelor Degree', 'English', 'Married', 'Software Developer', '1994-06-22', NULL, 10, 10, 110),
+('112233445566', 'Simran', 'Kaur', 'Baldev Singh', 'Female', 'Associate Degree', 'Punjabi', 'Unmarried', 'Beautician', '1996-11-03', NULL, 15, 11, 111),
+('223344556677', 'Ibrahim', 'Sheikh', 'Yusuf Sheikh', 'Male', 'Secondary School', 'Urdu', 'Married', 'Mechanic', '1989-02-28', NULL, 12, 12, 112),
+('334455667788', 'Sheetal', 'Yadav', 'Ram Singh Yadav', 'Female', 'Bachelor Degree', 'Hindi', 'Unmarried', 'Bank Teller', '1997-07-17', NULL, 14, 13, 113),
+('445566778899', 'John', 'Martin', 'Robert Martin', 'Male', 'Master Degree', 'English', 'Married', 'Professor', '1986-10-08', NULL, 4, 14, 114),
+('556677889900', 'Bhavna', 'Trivedi', 'Girish Trivedi', 'Female', 'High School', 'Gujarati', 'Married', 'Housewife', '1999-04-05', NULL, 1, 15, 115);
+
+INSERT INTO government_cards VALUES
+('123456789012', 'ABCDE1234F', 1001, 'P1234567', 'GJ0120250000001', 'GJ0000001'),
+('234567890123', 'FGHIJ5678G', 1002, 'P8765432', 'GJ0220240000002', 'GJ0000002'),
+('345678901234', 'KLMNO9012H', 1003, 'R1234568', 'GJ0320260000003', 'GJ0000003'),
+('456789012345', 'PQRST3456I', 1004, 'R8765433', 'GJ0420230000004', 'GJ0000004'),
+('567890123456', 'UVWXY7890J', 1005, 'S1234569', 'GJ0520270000005', 'GJ0000005'),
+('678901234567', 'BCDEF2345K', 1006, 'S8765434', 'GJ0620220000006', 'GJ0000006'),
+('789012345678', 'GHIJK6789L', 1007, 'T1234570', 'GJ0720280000007', 'GJ0000007'),
+('890123456789', 'LMNOP0123M', 1008, 'T8765435', 'GJ0820210000008', 'GJ0000008'),
+('901234567890', 'QRSTU4567N', 1009, 'U1234571', 'GJ0920290000009', 'GJ0000009'),
+('012345678912', 'VWXYZ8901O', 1010, 'U8765436', 'GJ1020200000010', 'GJ0000010'),
+('112233445566', 'CDEFG3456P', 1011, 'V1234572', 'GJ1120300000011', 'GJ0000011'),
+('223344556677', 'HIJKL7890Q', 1012, 'V8765437', 'GJ1220190000012', 'GJ0000012'),
+('334455667788', 'MNOPQ1234R', 1013, 'W1234573', 'GJ1320310000013', 'GJ0000013'),
+('445566778899', 'RSTUV5678S', 1014, 'W8765438', 'GJ1420180000014', 'GJ0000014'),
+('556677889900', 'WXYZA9012T', 1015, 'X1234574', 'GJ1520320000015', 'GJ0000015');
+
+INSERT INTO bank VALUES
+('SB1234567890', 'Savings', 55000, 'State Bank of India', 'SBIN0001234', '123456789012', 1),
+('CA9876543210', 'Current', 120000, 'HDFC Bank', 'HDFC0000001', '234567890123', 2),
+('RD5678901234', 'Recurring Deposit', 25000, 'ICICI Bank', 'ICIC0000002', '345678901234', 3),
+('FD0123456789', 'Fixed Deposit', 100000, 'Bank of Baroda', 'BARB0INDGHA', '456789012345', 4),
+('SB0987654321', 'Savings', 80000, 'Punjab National Bank', 'PUNB0123400', '567890123456', 5),
+('SA1122334455', 'Savings', 30000, 'Axis Bank', 'UTIB0000003', '678901234567', 6),
+('CD2233445566', 'Current', 200000, 'Kotak Mahindra Bank', 'KKBK0000004', '789012345678', 7),
+('LD3344556677', 'Loan Account', -150000, 'Canara Bank', 'CNRB0000005', '890123456789', 8),
+('SB4455667788', 'Savings', 65000, 'Union Bank of India', 'UBIN0000006', '901234567890', 9),
+('FD5566778899', 'Fixed Deposit', 150000, 'IDBI Bank', 'IBKL0000007', '012345678912', 10),
+('SV6677889900', 'Savings', 40000, 'Yes Bank', 'YESB0000008', '112233445566', 11),
+('CR7788990011', 'Current', 90000, 'IndusInd Bank', 'INDB0000009', '223344556677', 12),
+('RD8899001122', 'Recurring Deposit', 18000, 'Bank of Maharashtra', 'MAHB0000010', '334455667788', 13),
+('FX9900112233', 'Fixed Deposit', 220000, 'Central Bank of India', 'CBIN0000011', '445566778899', 14),
+('SG0011223344', 'Savings', 75000, 'Indian Overseas Bank', 'IOBA0000012', '556677889900', 15);
+
+INSERT INTO property VALUES
+(201, 'Apartment', 'Owned', '123456789012', 1),
+(202, 'Bungalow', 'Owned', '234567890123', 2),
+(203, 'Flat', 'Rented', '345678901234', 3),
+(204, 'Row House', 'Owned', '456789012345', 4),
+(205, 'Apartment', 'Rented', '567890123456', 5),
+(206, 'Bungalow', 'Owned', '678901234567', 6),
+(207, 'Flat', 'Owned', '789012345678', 7),
+(208, 'Row House', 'Rented', '890123456789', 8),
+(209, 'Agricultural Land', 'Owned', '901234567890', 9),
+(210, 'Commercial Space', 'Owned', '012345678912', 10),
+(211, 'Apartment', 'Owned', '112233445566', 11),
+(212, 'Industrial Plot', 'Owned', '223344556677', 12),
+(213, 'House', 'Rented', '334455667788', 13),
+(214, 'Farmhouse', 'Owned', '445566778899', 14),
+(215, 'Shop', 'Owned', '556677889900', 15);
+
+INSERT INTO income VALUES
+('678901234567', 45000, 1500, 3000),
+('789012345678', 70000, 0, 8000),
+('890123456789', 18000, 2200, 500),
+('901234567890', NULL, 2800, 0),
+('012345678912', 95000, 0, 12000);
+
+INSERT INTO crime VALUES
+('FIR20250413001', 'Theft', '3 years imprisonment and fine', '2025-04-05', 'Stole valuables from a residential property.', '345678901234'),
+('FIR20250413002', 'Assault', '1 year imprisonment and fine', '2025-04-08', 'Physical altercation leading to minor injuries.', '123456789012'),
+('FIR20250413003', 'Rash Driving', 'Fine and temporary license suspension', '2025-04-10', 'Driving at a high speed and endangering public safety.', '567890123456'),
+('FIR20250413004', 'Cheating', '2 years imprisonment and fine', '2025-03-28', 'Induced someone to part with money under false pretenses.', '890123456789'),
+('FIR20250413005', 'Cyber Fraud', '5 years imprisonment and heavy fine', '2025-04-01', 'Unauthorized transfer of funds through online banking.', '012345678912');
+
+INSERT INTO email VALUES
+('amit.patel@example.com', '123456789012'),
+('priya.sharma@sample.org', '234567890123'),
+('mohammad.khan@work.net', '345678901234'),
+('jesica.dsouza@home.in', '456789012345');
+
+INSERT INTO phone_number VALUES
+('9876543210', '123456789012'),
+('8765432109', '234567890123'),
+('7654321098', '345678901234'),
+('9988776655', '456789012345'),
+('8899001122', '567890123456'),
+('7788990011', '678901234567'),
+('9012345678', '789012345678'),
+('8090807060', '890123456789'),
+('7060708090', '901234567890'),
+('9123456789', '012345678912');
+
+INSERT INTO disease VALUES
+(1, 'Hypertension', 'Chronic'),
+(2, 'Diabetes Mellitus Type 2', 'Chronic'),
+(3, 'Common Cold', 'Infectious'),
+(4, 'Influenza (Flu)', 'Infectious'),
+(5, 'Asthma', 'Chronic'),
+(6, 'Coronary Artery Disease', 'Chronic'),
+(7, 'Tuberculosis (TB)', 'Infectious'),
+(8, 'Malaria', 'Infectious'),
+(9, 'Dengue Fever', 'Infectious'),
+(10, 'Chronic Obstructive Pulmonary Disease (COPD)', 'Chronic'),
+(11, 'Hepatitis B', 'Infectious'),
+(12, 'Arthritis', 'Chronic'),
+(13, 'Typhoid Fever', 'Infectious'),
+(14, 'Anemia', 'Nutritional/Other'),
+(15, 'Migraine', 'Neurological');
+
+INSERT INTO citizen_health_record VALUES
+('BRN2025GJ016', 3.4, 0.52, 'A+', 'Bharuch Civil Hospital', '678901234567', 1),
+('BRN2025GJ017', 2.9, 0.49, 'B-', 'Valsad General Hospital', '789012345678', 2),
+('BRN2025GJ018', 3.1, 0.50, 'O+', 'Vapi Community Health Center', '890123456789', 3),
+('BRN2025GJ019', 3.3, 0.51, 'AB-', 'Surendranagar Government Hospital', '901234567890', 4),
+('BRN2025GJ020', 2.8, 0.47, 'A-', 'Amreli District Hospital', '012345678912', 5);
+
+INSERT INTO death VALUES
+(1, 'Cardiac Arrest', '789012345678'),
+(2, 'Road Accident', '345678901234'),
+(3, 'Complications from COVID-19', '123456789012'),
+(4, 'Old Age', '678901234567'),
+(5, 'Cancer', '234567890123');
+
+INSERT INTO family VALUES
+('123456789012', 'Wife', '234567890123'),
+('234567890123', 'Husband', '123456789012'),
+('123456789012', 'Son', '901234567890'),
+('901234567890', 'Father', '123456789012'),
+('234567890123', 'Son', '901234567890'),
+('901234567890', 'Mother', '234567890123'),
+('678901234567', 'Husband', '789012345678'),
+('789012345678', 'Wife', '678901234567'),
+('012345678912', 'Wife', '334455667788'),
+('334455667788', 'Husband', '012345678912'); 
+
+INSERT INTO has_family_members VALUES
+('123456789012', '234567890123', 3),
+('234567890123', '123456789012', 3),
+('901234567890', '123456789012', 3),
+('678901234567', '789012345678', 2),
+('789012345678', '678901234567', 2),
+('012345678912', '334455667788', 2),
+('334455667788', '012345678912', 2);

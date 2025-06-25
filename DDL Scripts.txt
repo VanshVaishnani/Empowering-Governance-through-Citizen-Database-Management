@@ -1,0 +1,164 @@
+CREATE TABLE address (
+     address_id INT PRIMARY KEY,
+     street VARCHAR(100),
+     city VARCHAR(30),
+     district VARCHAR(30),
+     state VARCHAR(30),
+     pincode INT,
+     previous_address_id INT
+);
+
+CREATE TABLE religion (
+     religion_id INT PRIMARY KEY,
+     religion_name VARCHAR(20),
+     caste_name VARCHAR(20),
+     category VARCHAR(20)
+);
+
+-- Now create dependent tables
+
+CREATE TABLE citizen (
+	aadhar_number VARCHAR(12) PRIMARY KEY CHECK (length(aadhar_number) = 12),
+	first_name VARCHAR(50) NOT NULL,
+	surname VARCHAR(50) NOT NULL,
+	father_name VARCHAR(100),
+	gender VARCHAR(10) NOT NULL CHECK (gender IN ('Male', 'Female', 'Other')),
+	education_level VARCHAR(50),
+	primary_language VARCHAR(50),
+	marital_status VARCHAR(20) NOT NULL CHECK (marital_status IN('Married', 'Unmarried')),
+	occupation_type VARCHAR(50),
+	date_of_birth DATE NOT NULL,
+	date_of_death DATE,
+	religion_id INT,
+	address_id INT,
+	household_id INT,
+	FOREIGN KEY (religion_id) REFERENCES religion(religion_id) ON UPDATE CASCADE ON DELETE SET NULL,
+	FOREIGN KEY (address_id) REFERENCES address(address_id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE household (
+     household_id INT PRIMARY KEY,
+     house_type VARCHAR(30),
+     ownership VARCHAR(20),
+     address_id INT,
+     FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+-- Now update citizen with household foreign key properly
+ALTER TABLE citizen
+	ADD CONSTRAINT fk_citizen_household FOREIGN KEY (household_id) REFERENCES household(household_id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+CREATE TABLE has_family_members (
+     aadhar_number VARCHAR(12),
+     relationship_aadhar_number VARCHAR(12),
+     no_of_family_members INT,
+     PRIMARY KEY (aadhar_number, relationship_aadhar_number),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     FOREIGN KEY (relationship_aadhar_number) REFERENCES citizen(aadhar_number),
+     CHECK (length(aadhar_number) = 12),
+     CHECK (length(relationship_aadhar_number) = 12)
+);
+
+CREATE TABLE family (
+     aadhar_number VARCHAR(12),
+     relationship VARCHAR(30),
+     relationship_aadhar_number VARCHAR(12),
+     PRIMARY KEY (aadhar_number, relationship_aadhar_number),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     FOREIGN KEY (relationship_aadhar_number) REFERENCES citizen(aadhar_number),
+     CHECK (length(aadhar_number) = 12),
+     CHECK (length(relationship_aadhar_number) = 12)
+);
+
+CREATE TABLE disease (
+     disease_id INT PRIMARY KEY,
+     disease_name VARCHAR(100),
+     disease_type VARCHAR(50)
+);
+
+CREATE TABLE citizen_health_record (
+     birth_cert_reg_number VARCHAR(50) PRIMARY KEY,
+     weight FLOAT,
+     height FLOAT,
+     blood_group VARCHAR(5),
+     birth_address TEXT,
+     aadhar_number VARCHAR(12),
+     disease_id INT,
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     FOREIGN KEY (disease_id) REFERENCES disease(disease_id)
+);
+
+CREATE TABLE death (
+     death_cause_id INT PRIMARY KEY,
+     type_of_death VARCHAR(50),
+     aadhar_number VARCHAR(12),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number)
+);
+
+CREATE TABLE government_cards (
+     aadhar_number VARCHAR(12) PRIMARY KEY,
+     pan_number VARCHAR(10),
+     ration_card_number INT,
+     passport_number VARCHAR(8),
+     license_number VARCHAR(15),
+     voter_id_number VARCHAR(10),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     CHECK (length(aadhar_number) = 12)
+);
+
+CREATE TABLE property (
+     property_id INT PRIMARY KEY,
+     property_type VARCHAR(20),
+     ownership_status VARCHAR(20),
+     aadhar_number VARCHAR(12),
+     address_id INT,
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+CREATE TABLE bank (
+     account_number VARCHAR(20) PRIMARY KEY,
+     account_type VARCHAR(30),
+     balance INT,
+     bank_name VARCHAR(50),
+     ifsc_code VARCHAR(20),
+     aadhar_number VARCHAR(12),
+     address_id INT,
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+CREATE TABLE income (
+     aadhar_number VARCHAR(12) PRIMARY KEY,
+     salary INT,
+     government_subsidy INT,
+     payable_tax INT,
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     CHECK (length(aadhar_number) = 12)
+);
+
+CREATE TABLE crime (
+     fir_number VARCHAR(20) PRIMARY KEY,
+     crime_type VARCHAR(50),
+     punishment TEXT,
+     crime_date DATE,
+     description TEXT,
+     aadhar_number VARCHAR(12),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number)
+);
+
+CREATE TABLE email (
+     email_address VARCHAR(100) NOT NULL,
+     aadhar_number VARCHAR(12),
+     UNIQUE (email_address),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     CHECK (length(aadhar_number) = 12)
+);
+
+CREATE TABLE phone_number (
+     phone_number VARCHAR(15) NOT NULL,
+     aadhar_number VARCHAR(12),
+     UNIQUE (phone_number),
+     FOREIGN KEY (aadhar_number) REFERENCES citizen(aadhar_number),
+     CHECK (length(aadhar_number) = 12)
+);

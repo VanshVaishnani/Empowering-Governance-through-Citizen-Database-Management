@@ -1,0 +1,357 @@
+1. How many children under the age of 5 are there in each district?
+
+SELECT
+    a.district,
+    COUNT(c.aadhar_number) AS num_children_under_5
+FROM citizen c
+JOIN address a ON c.address_id = a.address_id
+WHERE c.date_of_birth > CURRENT_DATE - INTERVAL '5 year'
+GROUP BY a.district
+ORDER BY a.district;
+
+
+2. What is the per capita income of the country?
+
+SELECT SUM(i.salary + i.government_subsidy) * 1.0 / COUNT(DISTINCT c.aadhar_number) AS per_capita_income
+FROM citizen c
+JOIN income i ON c.aadhar_number = i.aadhar_number;
+
+
+3. What is the percentage of passing primary, secondary, higher secondary education based on caste and religion and region?
+
+SELECT
+    r.religion_name,
+    r.caste_name,
+    a.state,
+    SUM(CASE WHEN c.education_level NOT IN ('Primary School') THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS percentage_passed_primary,
+    SUM(CASE WHEN c.education_level NOT IN ('Primary School', 'Secondary School') THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS percentage_passed_secondary,
+    SUM(CASE WHEN c.education_level NOT IN ('Primary School', 'Secondary School', 'High School') THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS percentage_passed_higher_secondary
+FROM citizen c
+JOIN religion r ON c.religion_id = r.religion_id
+JOIN address a ON c.address_id = a.address_id
+GROUP BY r.religion_name, r.caste_name, a.state
+ORDER BY a.state, r.religion_name, r.caste_name;
+
+
+4. What is the education level distributed among different families based on annual family income?
+
+WITH HouseholdIncome AS (
+    SELECT
+        c.household_id,
+        SUM(i.salary + i.government_subsidy) AS total_household_income -- Assuming family income is the sum of individual incomes in a household
+    FROM citizen c
+    LEFT JOIN income i ON c.aadhar_number = i.aadhar_number
+    GROUP BY c.household_id
+)
+SELECT
+    hi.total_household_income,
+    c.education_level,
+    COUNT(DISTINCT c.aadhar_number) AS num_individuals
+FROM HouseholdIncome hi
+JOIN citizen c ON hi.household_id = c.household_id
+GROUP BY hi.total_household_income, c.education_level
+ORDER BY hi.total_household_income, c.education_level;
+
+
+5. What has been the impact of the national education program on literacy rates in rural areas? (Means what is the literacy rate in rural areas)
+
+SELECT
+    a.state,
+    a.district,
+    COUNT(CASE WHEN c.education_level IS NOT NULL AND c.education_level NOT IN ('Primary School', 'Secondary School', 'High School') THEN 1 END) * 100.0 / COUNT(*) AS rural_literacy_rate
+FROM citizen c
+JOIN address a ON c.address_id = a.address_id
+-- WHERE a.locality_type = 'Rural' -- Assuming such a column exists
+GROUP BY a.state, a.district
+ORDER BY a.state, a.district;
+
+
+6. To project population growth over the next 5 years, we need to make some assumptions and acknowledge the limitations of the current schema.
+
+Limitations:
+1.  The current schema does not contain historical population data.
+2.  It lacks data on migration (both into and out of states).
+3.  It doesn't have fertility rates or age-specific mortality rates, which are crucial for accurate projections.
+
+Assumptions (for a simplified projection):
+1.  We'll assume a uniform population growth rate across all states. This is a *very* simplified assumption. In reality, growth rates vary significantly.
+2.  We'll calculate the growth rate based on the existing citizen data as a proxy. This is also a simplification.
+3.  We'll ignore migration, which is a major factor in population change.
+4.  Since we don't have age-specific rates, we'll apply the overall growth rate to the entire population.
+
+WITH StatePopulation AS (
+    SELECT
+        a.state,
+        COUNT(c.aadhar_number) AS current_population
+    FROM address a
+    JOIN citizen c ON a.address_id = c.address_id
+    GROUP BY a.state
+),
+GrowthRate AS (
+    SELECT
+        AVG(
+            CASE
+                WHEN c.date_of_death IS NULL THEN 1
+                ELSE 0
+            END
+        ) AS survival_rate,
+		AVG(
+            CASE
+                WHEN EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM c.date_of_birth) <= 30 THEN 0.02 
+                ELSE 0
+            END
+        ) AS birth_rate 
+    FROM citizen c
+),
+ProjectionFactors AS (
+    SELECT
+        survival_rate,
+        birth_rate,
+        (survival_rate + birth_rate - 1) AS simplified_annual_growth_rate,
+        POWER((survival_rate + birth_rate), 5) AS five_year_growth_factor 
+    FROM GrowthRate
+)
+SELECT
+    sp.state,
+    sp.current_population,
+    ROUND(sp.current_population * pf.five_year_growth_factor) AS projected_population_5_years
+FROM StatePopulation sp
+CROSS JOIN ProjectionFactors pf
+ORDER BY sp.state;
+
+
+7. Distribution of different religions and castes across the country
+
+SELECT
+    r.religion_name,
+    r.caste_name,
+    r.category,
+    s.state,
+    COUNT(*) AS count
+FROM citizen c
+JOIN religion r ON c.religion_id = r.religion_id
+JOIN address s ON c.address_id = s.address_id
+GROUP BY r.religion_name, r.caste_name, r.category, s.state
+ORDER BY s.state, r.religion_name, r.caste_name;
+
+
+8. How many families in District are eligible for the state's housing assistance program with total household income below 50,000.
+
+WITH HouseholdIncome AS (
+    SELECT
+        c.household_id,
+        a.district,
+        SUM(COALESCE(i.salary, 0) + COALESCE(i.government_subsidy, 0)) AS total_household_income
+    FROM citizen c
+    JOIN address a ON c.address_id = a.address_id
+    LEFT JOIN income i ON c.aadhar_number = i.aadhar_number
+    GROUP BY c.household_id, a.district
+)
+SELECT
+    hi.district,
+    COUNT(DISTINCT hi.household_id) AS num_eligible_families
+FROM HouseholdIncome hi
+WHERE hi.total_household_income < 50000 -- Replace 50000 with the actual income criteria
+GROUP BY hi.district
+ORDER BY hi.district;
+
+
+9. Retrieve the address associated with Voter ID.
+
+SELECT
+    g.voter_id_number,
+    a.street,
+    a.city,
+    a.district,
+    a.state,
+    a.pincode
+FROM government_cards g
+JOIN citizen c ON g.aadhar_number = c.aadhar_number
+JOIN address a ON c.address_id = a.address_id
+WHERE g.voter_id_number IS NOT NULL
+ORDER BY g.voter_id_number;
+
+
+10. Percentage of voter in each district of a particular state.
+
+WITH VotersInState AS (
+    SELECT
+        c.aadhar_number
+    FROM citizen c
+    JOIN address a ON c.address_id = a.address_id
+    JOIN government_cards g ON c.aadhar_number = g.aadhar_number
+    WHERE a.state = 'Gujarat' AND g.voter_id_number IS NOT NULL -- Replace 'Gujarat'
+),
+TotalPopulationInDistrict AS (
+    SELECT
+        a.district,
+        COUNT(c.aadhar_number) AS total_population
+    FROM citizen c
+    JOIN address a ON c.address_id = a.address_id
+    WHERE a.state = 'Gujarat' -- Replace 'Gujarat'
+    GROUP BY a.district
+)
+SELECT
+    tpd.district,
+    COUNT(DISTINCT vis.aadhar_number) * 100.0 / tpd.total_population AS percentage_voters
+FROM TotalPopulationInDistrict tpd
+LEFT JOIN citizen c ON tpd.district = (SELECT district FROM address WHERE address_id = c.address_id)
+LEFT JOIN VotersInState vis ON c.aadhar_number = vis.aadhar_number
+GROUP BY tpd.district, tpd.total_population
+ORDER BY tpd.district;
+
+
+11. Migration trends between different states based on previous address
+
+SELECT
+    pa.state AS previous_state,
+    ca.state AS current_state,
+    COUNT(DISTINCT c.aadhar_number) AS num_migrants
+FROM citizen c
+JOIN address ca ON c.address_id = ca.address_id
+LEFT JOIN address pa ON ca.previous_address_id = pa.address_id
+WHERE ca.previous_address_id IS NOT NULL AND pa.state <> ca.state
+GROUP BY pa.state, ca.state
+ORDER BY previous_state, current_state;
+
+
+12. What is the BMI index of different age group like child, teen, adult, middle age adult, senior adult?
+
+WITH AgeCategory AS (
+    SELECT
+        chr.aadhar_number,
+        chr.weight,
+        chr.height,
+        CASE
+            WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.date_of_birth)) < 13 THEN 'Child'
+            WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.date_of_birth)) BETWEEN 13 AND 19 THEN 'Teen'
+            WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.date_of_birth)) BETWEEN 20 AND 39 THEN 'Adult'
+            WHEN EXTRACT(YEAR FROM AGE(CURRENT_DATE, c.date_of_birth)) BETWEEN 40 AND 59 THEN 'Middle Age Adult'
+            ELSE 'Senior Adult'
+        END AS age_group
+    FROM citizen_health_record chr
+    JOIN citizen c ON chr.aadhar_number = c.aadhar_number
+    WHERE chr.weight IS NOT NULL AND chr.height IS NOT NULL
+)
+SELECT
+    ac.age_group,
+    AVG(ac.weight / (ac.height * ac.height)) AS average_bmi
+FROM AgeCategory ac
+GROUP BY ac.age_group
+ORDER BY
+    CASE ac.age_group
+        WHEN 'Child' THEN 1
+        WHEN 'Teen' THEN 2
+        WHEN 'Adult' THEN 3
+        WHEN 'Middle Age Adult' THEN 4
+        WHEN 'Senior Adult' THEN 5
+    END;
+
+
+13. List all citizens with blood group.
+
+SELECT
+    c.first_name,
+    c.surname,
+    chr.blood_group
+FROM citizen c
+JOIN citizen_health_record chr ON c.aadhar_number = chr.aadhar_number
+WHERE chr.blood_group IS NOT NULL
+ORDER BY chr.blood_group, c.surname, c.first_name;
+
+
+14. What are the top 3 most common primary languages spoken by citizens?
+
+SELECT primary_language,
+COUNT(*) AS number_of_speakers
+FROM citizen
+GROUP BY primary_language
+ORDER BY number_of_speakers DESC
+LIMIT 3;
+
+
+15. What are the top 5 most frequent crime types recorded?
+
+SELECT crime_type,
+COUNT(*) AS number_of_occurrences
+FROM crime
+GROUP BY crime_type
+ORDER BY number_of_occurrences DESC
+LIMIT 5;
+
+
+16.  For citizens owning more than one property, what is the distribution of their declared income tax liability compared to the estimated value of their properties? Are there significant discrepancies that might warrant further investigation for potential tax evasion?
+
+WITH CitizenFinancialProfile AS (
+    SELECT
+        c.aadhar_number,
+        c.first_name,
+        c.surname,
+        i.salary,
+        i.government_subsidy,
+        b.balance,
+        gc.pan_number
+    FROM
+        citizen c
+    LEFT JOIN
+        income i ON c.aadhar_number = i.aadhar_number
+    LEFT JOIN
+        bank b ON c.aadhar_number = b.aadhar_number
+    LEFT JOIN
+        government_cards gc ON c.aadhar_number = gc.aadhar_number
+)
+SELECT
+    cfp.first_name,
+    cfp.surname,
+    cfp.salary,
+    cfp.government_subsidy,
+    cfp.balance,
+    cfp.pan_number,
+    p.property_type,
+    pa.city AS property_city
+FROM CitizenFinancialProfile cfp
+LEFT JOIN property p ON cfp.aadhar_number = p.aadhar_number
+LEFT JOIN address pa ON p.address_id = pa.address_id
+WHERE cfp.salary IS NULL AND cfp.balance > 100000 AND p.property_type = 'Commercial';
+
+
+
+17. What is the Relationship Between Education Level and Occupation Type?
+
+SELECT
+    c.education_level,
+    c.occupation_type,
+    COUNT(*) AS number_of_citizens
+FROM citizen c
+GROUP BY c.education_level, c.occupation_type
+ORDER BY c.education_level, COUNT(*) DESC;
+
+
+18. No. of people having a passport and being recorded in the crime table.
+
+SELECT
+    CASE
+        WHEN gc.passport_number IS NOT NULL THEN 'Has Passport'
+        ELSE 'No Passport'
+    END AS passport_status,
+    COUNT(DISTINCT c.aadhar_number) AS number_of_citizens,
+    SUM(CASE WHEN cr.aadhar_number IS NOT NULL THEN 1 ELSE 0 END) AS number_of_crimes_involved
+FROM
+    citizen c
+LEFT JOIN
+    government_cards gc ON c.aadhar_number = gc.aadhar_number
+LEFT JOIN
+    crime cr ON c.aadhar_number = cr.aadhar_number
+GROUP BY
+    passport_status
+ORDER BY
+    passport_status;
+
+
+
+
+
+
+
+
+
